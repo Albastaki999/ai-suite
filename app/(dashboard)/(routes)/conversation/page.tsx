@@ -4,7 +4,6 @@ import Heading from '@/components/heading'
 import { MessageSquare } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
 
 import { formSchema } from './constants'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,12 +11,13 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import { ChatCompletionRequestMessage } from 'openai'
 import Empty from '@/components/empty'
+import chatAPI from '@/app/api/chatAPI'
+import Loader from '@/components/loader'
 
 const Page = () => {
     const router = useRouter()
-    const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
+    const [messages, setMessages] = useState<string[]>([])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -29,20 +29,24 @@ const Page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const userMessage: ChatCompletionRequestMessage = {
-                role: 'user',
-                content: values.prompt,
-            };
+            // const userMessage: ChatCompletionRequestMessage = {
+            //     role: 'user',
+            //     content: values.prompt,
+            // };
+            const userMessage: string = values.prompt
             const newMessages = [...messages, userMessage]
 
-            const response = await axios.post('/api/conversation', {
-                messages: newMessages,
-            })
+            // const response = await axios.post('/api/conversation', {
+            //     messages: newMessages,
+            // })
+            const response = await chatAPI(userMessage)
+            console.log(response);
+
 
             setMessages((current) => [
                 ...current,
                 userMessage,
-                response.data
+                response
             ])
         }
         catch (error) {
@@ -92,14 +96,22 @@ const Page = () => {
                 </div>
                 <div className='spacer-y-4 mt-4'>
                     {
-                        messages.length === 0 && !isLoading && (
-                            <Empty />
+                        true && (
+                            <div className='p-8 rounded-lg w-full flex items-center justify-center bg-muted'>
+                                <Loader />
+                            </div>
                         )
                     }
+                    {/* TODO: Empty image */}
+                    {
+                        // messages.length === 0 && !isLoading && (
+                        //     <Empty label="No Conversation started." />
+                        // )
+                    }
                     <div className='flex flex-col-reverse gap-y-4'>
-                        {messages.map((message) => (
-                            <div key={message.content}>
-                                {message.content}
+                        {messages.map((message, index) => (
+                            <div key={index}>
+                                {message}
                             </div>
                         ))}
                     </div>
