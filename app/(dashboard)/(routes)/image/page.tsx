@@ -21,7 +21,7 @@ import Image from 'next/image'
 const Page = () => {
     const router = useRouter()
     const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
-    const [imageUrls, setImageUrls] = useState<string[]>([])
+    const [imageUrls, setImageUrls] = useState<string[]>(['/logo.png'])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -56,21 +56,6 @@ const Page = () => {
                 })
                 return newMessages;
             })
-            // if (response) {
-            //     // setMessages((prev) => {
-            //     //     const newMessages = [...prev]
-            //     //     newMessages.push({
-            //     //         by: "bot",
-            //     //         content: response
-            //     //     })
-            //     //     return newMessages;
-            //     // })
-            // }
-            // setMessages((current) => [
-            //     ...current,
-            //     userMessage,
-            //     response
-            // ])
             form.reset()
         }
         catch (error) {
@@ -207,7 +192,7 @@ const Page = () => {
                                                 className='w-full'
                                             >
                                                 <Download className='h-4 w-4 mr-2' />
-
+                                                Download
                                             </Button>
                                         </CardFooter>
 
