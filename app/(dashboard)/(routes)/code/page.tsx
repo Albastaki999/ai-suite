@@ -1,7 +1,7 @@
 'use client'
 import * as z from 'zod'
 import Heading from '@/components/heading'
-import { MessageSquare } from 'lucide-react'
+import { Code } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -11,12 +11,13 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import Empty from '@/components/empty'
-import chatAPI from '@/app/api/chatAPI'
 import Loader from '@/components/loader'
 import { cn } from '@/lib/utils'
 import UserAvatar from '@/components/user-avatar'
 import BotAvatar from '@/components/bot-avatar'
+import ReactMarkdown from 'react-markdown'
+import rehypeHighlight from 'rehype-highlight'
+import codeAPI from '@/app/api/codeAPI'
 
 const Page = () => {
     const router = useRouter()
@@ -32,17 +33,8 @@ const Page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            // const userMessage: ChatCompletionRequestMessage = {
-            //     role: 'user',
-            //     content: values.prompt,
-            // };
             const userMessage: string = values.prompt
-            // const newMessages = [...messages, userMessage]
-
-            // const response = await axios.post('/api/conversation', {
-            //     messages: newMessages,
-            // })
-            const response = await chatAPI(userMessage)
+            const response = await codeAPI(userMessage)
 
             setMessages((prev) => {
                 const newMessages = [...prev]
@@ -54,6 +46,8 @@ const Page = () => {
             })
             if (response) {
                 setMessages((prev) => {
+                    console.log(response, "response");
+
                     const newMessages = [...prev]
                     newMessages.push({
                         by: "bot",
@@ -62,11 +56,6 @@ const Page = () => {
                     return newMessages;
                 })
             }
-            // setMessages((current) => [
-            //     ...current,
-            //     userMessage,
-            //     response
-            // ])
             form.reset()
         }
         catch (error) {
@@ -80,11 +69,11 @@ const Page = () => {
     return (
         <div>
             <Heading
-                title='Conversation'
-                description='Our most advanced conversation model.'
-                icon={MessageSquare}
-                iconColor='text-violet-500'
-                bgColor='bg-violet-500/10'
+                title='Code Generation'
+                description='Generate code using descriptive text'
+                icon={Code}
+                iconColor='text-green-700'
+                bgColor='bg-green-700/10'
             />
             <div className='px-4 lg:px-8'>
                 <div>
@@ -101,7 +90,7 @@ const Page = () => {
                                             <Input
                                                 className='border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent'
                                                 disabled={isLoading}
-                                                placeholder='How do I master DSA in 6 months?'
+                                                placeholder='Simple toggle button using react hooks.'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -137,9 +126,23 @@ const Page = () => {
                                 }
                             >
                                 {message.by === "user" ? <UserAvatar /> : <BotAvatar />}
-                                <p className='text-sm'>
-                                    {message.content}
-                                </p>
+                                <div className="text-sm overflow-hidden leading-7">
+                                    <ReactMarkdown
+                                        rehypePlugins={[rehypeHighlight]}
+                                        components={{
+                                            pre: ({ node, ...props }) => (
+                                                <div className='overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg'>
+                                                    <pre {...props} />
+                                                </div>
+                                            ),
+                                            code: ({ node, ...props }) => (
+                                                <code className='bg-black/10 rounded-lg p-1' {...props} />
+                                            )
+                                        }}
+                                    >
+                                        {message.content || ""}
+                                    </ReactMarkdown>
+                                </div>
                             </div>
                         ))}
                     </div>
