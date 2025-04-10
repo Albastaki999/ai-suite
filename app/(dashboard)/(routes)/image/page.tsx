@@ -21,7 +21,7 @@ import Image from 'next/image'
 const Page = () => {
     const router = useRouter()
     const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
-    const [imageUrls, setImageUrls] = useState<string[]>(['/logo.png'])
+    const [imageUrls, setImageUrls] = useState<string[]>([])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -173,34 +173,28 @@ const Page = () => {
                         // )
                     }
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8'>
-                        {
-                            imageUrls.map((src) => (
-                                <Card
-                                    key={src}
-                                    className='rounded-lg overflow-hidden'
-                                >
-                                    <div className='relative aspect-square' >
-                                        <Image
-                                            alt='Image'
-                                            fill
-                                            src={src}
-                                        />
-                                        <CardFooter className='p-2'>
-                                            <Button
-                                                onClick={() => { window.open(src) }}
-                                                variant="secondary"
-                                                className='w-full'
-                                            >
-                                                <Download className='h-4 w-4 mr-2' />
-                                                Download
-                                            </Button>
-                                        </CardFooter>
+                        {imageUrls.map((src) => {
+                            const resolution = form.getValues('resolution') || '512x512'
+                            const [width, height] = resolution.split('x').map(Number)
 
+                            return (
+                                <Card key={src} className='rounded-lg overflow-hidden'>
+                                    <div className='relative' style={{ maxWidth: `256px`, maxHeight: `256px` }}>
+                                        <img src={src} alt="" className='max-h-full max-w-full object-cover' />
                                     </div>
-
+                                    <CardFooter className='p-2'>
+                                        <Button
+                                            onClick={() => { window.open(src) }}
+                                            variant="secondary"
+                                            className='w-full'
+                                        >
+                                            <Download className='h-4 w-4 mr-2' />
+                                            Download
+                                        </Button>
+                                    </CardFooter>
                                 </Card>
-                            ))
-                        }
+                            )
+                        })}
 
                     </div>
                 </div>
