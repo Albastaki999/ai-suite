@@ -32,12 +32,12 @@ const routes = [
     href: "/image",
     color: "text-pink-700",
   },
-  {
-    label: "Video Generation",
-    icon: VideoIcon,
-    href: "/video",
-    color: "text-orange-700",
-  },
+  // {
+  //   label: "Video Generation",
+  //   icon: VideoIcon,
+  //   href: "/video",
+  //   color: "text-orange-700",
+  // },
   {
     label: "Music Generation",
     icon: Music,
@@ -50,11 +50,11 @@ const routes = [
     href: "/code",
     color: "text-green-700",
   },
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "/settings",
-  },
+  // {
+  //   label: "Settings",
+  //   icon: Settings,
+  //   href: "/settings",
+  // },
 ]
 
 const Sidebar = () => {
