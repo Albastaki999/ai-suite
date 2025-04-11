@@ -1,7 +1,7 @@
 'use client'
 import * as z from 'zod'
 import Heading from '@/components/heading'
-import { Music } from 'lucide-react'
+import { Video } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -18,7 +18,7 @@ import axios from 'axios'
 
 const Page = () => {
     const router = useRouter()
-    const [music, setMusic] = useState<string>()
+    const [video, setVideo] = useState<string>()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -30,21 +30,21 @@ const Page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            setMusic(undefined)
-            const response = await musicAPI(values.prompt)
-            // const response = await axios.post("/api/music", values)
-            // setMusic(response.data.audio)
-            // console.log(response, "response");
+            setVideo(undefined)
+            const response = await axios.post("/api/video", values)
             
-
-            if (response) {
-                setMusic(URL.createObjectURL(response))
+            // The API now returns the video URL directly
+            if (response.data) {
+                setVideo(response.data)
+            } else {
+                console.error("No video URL in response:", response)
             }
 
             form.reset()
         }
-        catch (error) {
-            console.log(error)
+        catch (error: any) {
+            console.error("Video generation failed:", error.response?.data || error.message)
+            // Optionally show error to user
         }
         finally {
             router.refresh()
@@ -54,11 +54,11 @@ const Page = () => {
     return (
         <div>
             <Heading
-                title='Music Generation'
-                description='Turn your prompt into music.'
-                icon={Music}
-                iconColor='text-emerald-500'
-                bgColor='bg-emerald-500/10'
+                title='Video Generation'
+                description='Turn your prompt into video.'
+                icon={Video}
+                iconColor='text-orange-700'
+                bgColor='bg-orange-700/10'
             />
             <div className='px-4 lg:px-8'>
                 <div>
@@ -75,7 +75,7 @@ const Page = () => {
                                             <Input
                                                 className='border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent'
                                                 disabled={isLoading}
-                                                placeholder='Piano solo'
+                                                placeholder='Clown fish swimming around a coral reef'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -103,10 +103,10 @@ const Page = () => {
                         //     <Empty label="No Conversation started." />
                         // )
                     }
-                    {music && (
-                        <audio controls className='w-full mt-8 '>
-                            <source src={music}/> 
-                        </audio>
+                    {video && (
+                        <video controls className='w-full aspect-video mt-8 rounded-lg border bg-black'>
+                            <source src={video}/>
+                        </video>
                     )
 
                     }
