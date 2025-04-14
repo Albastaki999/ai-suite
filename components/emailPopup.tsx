@@ -1,24 +1,32 @@
-import { Eye, EyeOff, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
 import { Button } from './ui/button';
+import { PasswordPopup } from './passwordPopup';
 
-interface PasswordProps {
+interface EmailProps {
     open: boolean;
-    password: string;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    content: string;
+    password: string;
     setPassword: React.Dispatch<React.SetStateAction<string>>;
+    setContent: React.Dispatch<React.SetStateAction<string>>;
 }
-export const PasswordPopup = ({
-    open,
-    password,
-    setOpen,
-    setPassword,
-}: PasswordProps) => {
-    const [show, setShow] = useState<boolean>(false);
+
+const EmailPopup = ({
+    open, setOpen, content, password, setPassword, setContent
+}: EmailProps) => {
+    const [passOpen, setPassOpen] = useState<boolean>(false)
+
+    const handleSend = (): void => {
+        if (!password) {
+            setPassOpen(true)
+            return
+        }
+    }
     return (
         <>
-            {open &&
+            {true &&
                 <div className="fixed z-[100] top-0 left-0 w-screen h-screen bg-black/10 backdrop-blur-[1px] flex justify-center items-center">
                     <AnimatePresence>
                         <motion.div
@@ -37,33 +45,33 @@ export const PasswordPopup = ({
                             transition={{
                                 duration: 0.7
                             }}
-                            className='relative md:ml-72 bg-white p-5 rounded-[8px] w-[400px]'>
+                            className='md:ml-72 relative bg-white p-5 rounded-[8px] w-[600px]'>
                             <div className='absolute text-gray-600 top-2 right-2 cursor-pointer transition-all hover:text-gray-600/80 duration-300' onClick={(e) => {
                                 e.stopPropagation()
                                 setOpen(false);
                             }} >
                                 <X />
                             </div>
-                            <div className='font-medium text-gray-600'>
-                                Enter your Email Password
+                            <div className='text-[18px] font-medium'>
+                                Edit or Send your Email
                             </div>
-                            <div className='relative mt-2 w-full p-2 border border-[#a3a3a3] rounded-[8px]'>
-                                <input value={password} className='w-full ring-0 outline-0 ' type={show ? "text" : "password"} onChange={(e) => { setPassword(e.target.value); }} />
-                                <div className='absolute top-[50%] -translate-y-1/2 right-2 cursor-pointer'
-                                    onClick={() => { setShow(!show) }}
-                                >
-                                    {show ? <EyeOff /> : <Eye />}
-                                </div>
+                            <div className=''>
                             </div>
-                            <div className='w-full flex justify-end items-center mt-4 gap-2'>
-                                <Button className='w-full'>
-                                    Submit
-                                </Button>
-                            </div>
+                            <textarea className='scrollablerow overflow-y-auto resize-none mt-5 w-full h-[400px] p-2 border border-[#a3a3a3] rounded-[8px] text-gray-600' value={content} onChange={(e) => {
+                                setContent(e.target.value)
+                            }} />
+                            <Button className='w-full mt-5 cursor-pointer' onClick={() => {
+                                handleSend()
+                            }}>
+                                Send
+                            </Button>
                         </motion.div>
                     </AnimatePresence>
                 </div>
             }
+            <PasswordPopup open={passOpen} setOpen={setPassOpen} password={password} setPassword={setPassword} />
         </>
     )
 }
+
+export default EmailPopup

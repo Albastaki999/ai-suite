@@ -118,10 +118,38 @@ body,
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+.scrollablerow::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  /* Make the scrollbar narrow */
+  height: 8px;
+  /* For horizontal scrollbars */
+}
+
+:root::-webkit-scrollbar {
+  display: hidden;
+}
+
+.scrollablerow::-webkit-scrollbar-thumb {
+  display: block;
+  background: rgba(0, 0, 0, 0.5);
+  /* Slight transparency */
+  border-radius: 50px;
+  /* Roundish look */
+}
+
+.scrollablerow::-webkit-scrollbar-track {
+  display: block;
+  background: rgba(0, 0, 0, 0.1);
+  /* Light transparent track */
+  border-radius: 50px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
