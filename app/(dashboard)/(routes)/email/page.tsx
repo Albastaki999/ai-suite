@@ -23,6 +23,7 @@ import { PasswordPopup } from '@/components/passwordPopup'
 const Page = () => {
     const router = useRouter()
     const [open, setOpen] = useState<boolean>(false);
+    const [password, setPassword] = useState<string>("");
     const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -104,7 +105,8 @@ const Page = () => {
                         </form>
                     </Form>
                 </div>
-                <div className='spacer-y-4 mt-4'>
+                <div className='spacer-y-4 mt-4 p-10'
+                    onClick={() => { setOpen(true) }}>
                     {/* TODO: Change logo in spinner */}
                     {
                         isLoading && (
@@ -119,7 +121,7 @@ const Page = () => {
                         //     <Empty label="No Conversation started." />
                         // )
                     }
-                    <PasswordPopup open={open} setOpen={setOpen} />
+                    <PasswordPopup open={open} password={password} setOpen={setOpen} setPassword={setPassword} />
                     <div className='flex flex-col-reverse gap-y-4'>
                         {messages.map((message, index) => (
                             <div key={index}

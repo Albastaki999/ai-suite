@@ -65,7 +65,7 @@ const Sidebar = () => {
               alt='Logo'
             />
           </div>
-          <h1 className={cn("text-2xl font-bold", montserrat.className)}>
+          <h1 className={cn("text-2xl font-bold light:text-green-400", montserrat.className)}>
             AI-Suite
           </h1>
         </Link>
