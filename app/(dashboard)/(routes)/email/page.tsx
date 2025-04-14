@@ -1,7 +1,7 @@
 'use client'
 import * as z from 'zod'
 import Heading from '@/components/heading'
-import { Video } from 'lucide-react'
+import { MailPlus } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -12,12 +12,18 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import Empty from '@/components/empty'
+import chatAPI from '@/app/api/chatAPI'
 import Loader from '@/components/loader'
-import axios from 'axios'
+import { cn } from '@/lib/utils'
+import UserAvatar from '@/components/user-avatar'
+import BotAvatar from '@/components/bot-avatar'
+import genEmail from '@/app/api/generate-email'
+import { PasswordPopup } from '@/components/passwordPopup'
 
 const Page = () => {
     const router = useRouter()
-    const [video, setVideo] = useState<string>()
+    const [open, setOpen] = useState<boolean>(false);
+    const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -29,21 +35,32 @@ const Page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            setVideo(undefined)
-            const response = await axios.post("/api/video", values)
-            
-            // The API now returns the video URL directly
-            if (response.data) {
-                setVideo(response.data)
-            } else {
-                console.error("No video URL in response:", response)
-            }
+            setOpen(true)
+            const userMessage: string = values.prompt
+            const response = await genEmail(userMessage)
 
+            if (response) {
+                setMessages((prev) => {
+                    const newMessages = [...prev]
+                    newMessages.push({
+                        by: "bot",
+                        content: response
+                    })
+                    return newMessages;
+                })
+                setMessages((prev) => {
+                    const newMessages = [...prev]
+                    newMessages.push({
+                        by: "user",
+                        content: userMessage
+                    })
+                    return newMessages;
+                })
+            }
             form.reset()
         }
-        catch (error: any) {
-            console.error("Video generation failed:", error.response?.data || error.message)
-            // Optionally show error to user
+        catch (error) {
+            console.log(error)
         }
         finally {
             router.refresh()
@@ -53,11 +70,11 @@ const Page = () => {
     return (
         <div>
             <Heading
-                title='Video Generation'
-                description='Turn your prompt into video.'
-                icon={Video}
-                iconColor='text-orange-700'
-                bgColor='bg-orange-700/10'
+                title='Email Composer'
+                description='Generate Email bodies using AI.'
+                icon={MailPlus}
+                iconColor='text-red-400'
+                bgColor='bg-red-400/10'
             />
             <div className='px-4 lg:px-8'>
                 <div>
@@ -74,7 +91,7 @@ const Page = () => {
                                             <Input
                                                 className='border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent'
                                                 disabled={isLoading}
-                                                placeholder='Clown fish swimming around a coral reef'
+                                                placeholder='Generate an email body to request a sick leave from my college'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -98,17 +115,25 @@ const Page = () => {
                     }
                     {/* TODO: Empty image */}
                     {
-                        // !music && !isLoading && (
+                        // messages.length === 0 && !isLoading && (
                         //     <Empty label="No Conversation started." />
                         // )
                     }
-                    {video && (
-                        <video controls className='w-full aspect-video mt-8 rounded-lg border bg-black'>
-                            <source src={video}/>
-                        </video>
-                    )
-
-                    }
+                    <PasswordPopup open={open} setOpen={setOpen} />
+                    <div className='flex flex-col-reverse gap-y-4'>
+                        {messages.map((message, index) => (
+                            <div key={index}
+                                className={cn("p-8 w-full flex items-center gap-x-8 rounded-lg",
+                                    message.by === "user" ? "bg-white border border-black/10" : "bg-muted")
+                                }
+                            >
+                                {message.by === "user" ? <UserAvatar /> : <BotAvatar />}
+                                <p className='text-sm'>
+                                    {message.content}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

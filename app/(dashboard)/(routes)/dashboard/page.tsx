@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Code, ImageIcon, MessageSquare, Music, VideoIcon } from "lucide-react";
+import { ArrowRight, Code, ImageIcon, MailPlus, MessageSquare, Music } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const tools = [
@@ -27,19 +27,19 @@ const tools = [
     bgColor: "bg-pink-700/10",
     href: "/image",
   },
-  // {
-  //   label: "Video Generation",
-  //   icon: VideoIcon,
-  //   color: "text-orange-700",
-  //   bgColor: "bg-orange-700/10",
-  //   href: "/video",
-  // },
   {
     label: "Code Generation",
     icon: Code,
     color: "text-green-700",
     bgColor: "bg-green-700/10",
     href: "/code",
+  },
+  {
+    label: "Email Composer",
+    icon: MailPlus,
+    color: "text-red-400",
+    bgColor: "bg-red-400/10",
+    href: "/email",
   },
 ]
 

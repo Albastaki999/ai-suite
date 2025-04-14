@@ -5,7 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { cn } from '@/lib/utils'
-import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from 'lucide-react'
+import { Code, ImageIcon, LayoutDashboard, MailPlus, MessageSquare, Music, Settings, VideoIcon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 const montserrat = Montserrat({
@@ -32,12 +32,12 @@ const routes = [
     href: "/image",
     color: "text-pink-700",
   },
-  // {
-  //   label: "Video Generation",
-  //   icon: VideoIcon,
-  //   href: "/video",
-  //   color: "text-orange-700",
-  // },
+  {
+    label: "Code Generation",
+    icon: Code,
+    href: "/code",
+    color: "text-green-700",
+  },
   {
     label: "Music Generation",
     icon: Music,
@@ -45,16 +45,11 @@ const routes = [
     color: "text-emerald-500",
   },
   {
-    label: "Code Generation",
-    icon: Code,
-    href: "/code",
-    color: "text-green-700",
+    label: "Email Composer",
+    icon: MailPlus,
+    href: "/email",
+    color: "text-red-400",
   },
-  // {
-  //   label: "Settings",
-  //   icon: Settings,
-  //   href: "/settings",
-  // },
 ]
 
 const Sidebar = () => {
