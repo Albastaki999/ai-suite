@@ -2,20 +2,29 @@ import { Eye, EyeOff, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from './ui/button';
+import sendEmail from '@/app/api/sendEmail';
+import { useUser } from '@clerk/nextjs';
 
 interface PasswordProps {
     open: boolean;
     password: string;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setPassword: React.Dispatch<React.SetStateAction<string>>;
+    to: string;
+    body: string;
+    sub: string;
 }
 export const PasswordPopup = ({
     open,
     password,
     setOpen,
     setPassword,
+    to,
+    body,
+    sub
 }: PasswordProps) => {
     const [show, setShow] = useState<boolean>(false);
+
     return (
         <>
             {open &&
@@ -39,7 +48,6 @@ export const PasswordPopup = ({
                             }}
                             className='relative md:ml-72 bg-white p-5 rounded-[8px] w-[400px]'>
                             <div className='absolute text-gray-600 top-2 right-2 cursor-pointer transition-all hover:text-gray-600/80 duration-300' onClick={(e) => {
-                                e.stopPropagation()
                                 setOpen(false);
                             }} >
                                 <X />
@@ -56,7 +64,11 @@ export const PasswordPopup = ({
                                 </div>
                             </div>
                             <div className='w-full flex justify-end items-center mt-4 gap-2'>
-                                <Button className='w-full'>
+                                <Button className='w-full' disabled={!password}
+                                    onClick={() => {
+                                        setOpen(false)
+                                    }}
+                                >
                                     Submit
                                 </Button>
                             </div>
