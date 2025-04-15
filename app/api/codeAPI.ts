@@ -1,15 +1,25 @@
 import axiosInstance from "./axiosInstance";
 
-const codeAPI = async (prompt: string) => {
+// Utility to remove <think>...</think> tags
+const stripThinkTag = (text: string): string => {
+    return text.replace(/<think>.*?<\/think>/gs, '').trim();
+};
 
+const codeAPI = async (prompt: string): Promise<string | { error: string }> => {
     try {
         const response = await axiosInstance.get("/code", {
-            params: { message: prompt }, // Correct way to send query parameters
-        }); 
-        return response.data;
+            params: { message: prompt },
+        });
+
+        const raw = response.data.response || response.data;
+        const cleaned = stripThinkTag(raw);
+
+        return cleaned;
+
     } catch (error: any) {
-        console.log(error);
-        return { error: error.response?.data.error || "Unexpected error occured." };
+        console.log("codeAPI error:", error);
+        return { error: error.response?.data.error || "Unexpected error occurred." };
     }
 };
+
 export default codeAPI;
