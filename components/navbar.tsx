@@ -6,7 +6,7 @@ const Navbar = () => {
     return (
         <div className='flex items-center p-4'>
             <MobileSidebar />
-            <div className='flex w-full justify-end'>
+            <div className='flex w-full justify-end min-h-[28px]'>
                 <UserButton />
             </div>
         </div>

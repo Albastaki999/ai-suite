@@ -19,11 +19,15 @@ import UserAvatar from '@/components/user-avatar'
 import BotAvatar from '@/components/bot-avatar'
 import genEmail from '@/app/api/generate-email'
 import { PasswordPopup } from '@/components/passwordPopup'
+import EmailPopup from '@/components/emailPopup'
 
 const Page = () => {
     const router = useRouter()
-    const [open, setOpen] = useState<boolean>(false);
+    const [content, setContent] = useState<string>('Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, et laudantium. Quis dolor laudantium, alias earum incidunt sapiente quibusdam aperiam, quasi qui magnam doloribus adipisci aliquid quo voluptatibus nemo tempora provident hic autem ducimus animi labore natus velit eius. Esse officiis accusantium at quod? A reprehenderit possimus iste repellat officia!Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, et laudantium. Quis dolor laudantium, alias earum incidunt sapiente quibusdam aperiam, quasi qui magnam doloribus adipisci aliquid quo voluptatibus nemo tempora provident hic autem ducimus animi labore natus velit eius. Esse officiis accusantium at quod? A reprehenderit possimus iste repellat officia!Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, et laudantium. Quis dolor laudantium, alias earum incidunt sapiente quibusdam aperiam, quasi qui magnam doloribus adipisci aliquid quo voluptatibus nemo tempora provident hic autem ducimus animi labore natus velit eius. Esse officiis accusantium at quod? A reprehenderit possimus iste repellat officia!Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, et laudantium. Quis dolor laudantium, alias earum incidunt sapiente quibusdam aperiam, quasi qui magnam doloribus adipisci aliquid quo voluptatibus nemo tempora provident hic autem ducimus animi labore natus velit eius. Esse officiis accusantium at quod? A reprehenderit possimus iste repellat officia!');
+    const [openEmail, setOpenEmail] = useState<boolean>(false);
+    const [password, setPassword] = useState<string>("");
     const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
+    const [prompt, setPrompt] = useState<string>();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -35,27 +39,13 @@ const Page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            setOpen(true)
             const userMessage: string = values.prompt
+            setPrompt(userMessage)
             const response = await genEmail(userMessage)
 
             if (response) {
-                setMessages((prev) => {
-                    const newMessages = [...prev]
-                    newMessages.push({
-                        by: "bot",
-                        content: response
-                    })
-                    return newMessages;
-                })
-                setMessages((prev) => {
-                    const newMessages = [...prev]
-                    newMessages.push({
-                        by: "user",
-                        content: userMessage
-                    })
-                    return newMessages;
-                })
+                setContent(response)
+                !isLoading && setOpenEmail(true)
             }
             form.reset()
         }
@@ -119,7 +109,16 @@ const Page = () => {
                         //     <Empty label="No Conversation started." />
                         // )
                     }
-                    <PasswordPopup open={open} setOpen={setOpen} />
+                    <EmailPopup
+                        open={openEmail}
+                        setOpen={setOpenEmail}
+                        content={content}
+                        password={password}
+                        setPassword={setPassword}
+                        setContent={setContent}
+                        setMessages={setMessages}
+                        prompt={prompt || ''}
+                    />
                     <div className='flex flex-col-reverse gap-y-4'>
                         {messages.map((message, index) => (
                             <div key={index}
