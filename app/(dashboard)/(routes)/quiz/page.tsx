@@ -1,7 +1,7 @@
 'use client'
 import * as z from 'zod'
 import Heading from '@/components/heading'
-import { BookText } from 'lucide-react'
+import { BookText, ChevronLeftCircle, ChevronRightCircle } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -26,21 +26,24 @@ import Csharp from '@/components/icons/csharp'
 import Dsa from '@/components/icons/dsa'
 import Os from '@/components/icons/os'
 import C from '@/components/icons/c'
+import QuestionsComponents from '@/components/questions'
 
+export type Questions = {
+    question: string,
+    options: string[],
+    correct: number
+}
 const Page = () => {
     const router = useRouter()
-    type Questions = {
-        question: string,
-        options: string[],
-        correct: number
-    }
     const [topicChosen, setTopicChosen] = useState<string>("");
     const [topicIndex, setTopicIndex] = useState<number>(-1);
     const [difficulty, setDifficulty] = useState<string>("");
     const [no, setNo] = useState<number>();
+    const [questionNo, setQuestionNo] = useState<number>(1)
     const [isLoading, setIsloading] = useState<boolean>(false);
-    const [showQuizDesign, setShowQuizDesign] = useState<boolean>(true)
-    const [questions, setQuestions] = useState<Questions[]>()
+    const [showQuizDesign, setShowQuizDesign] = useState<boolean>(false)
+    const [questions, setQuestions] = useState<Questions[]>([{ question: "What is the difference between public and private methods in Java?", options: ["Both are used to create methods", "Only private methods are used for security", "Public methods can be overridden", "Private methods cannot be called from outside"], correct: 2 },
+    { question: "What is the difference between public and private methods in Java?", options: ["Both are used to create methods", "Only private methods are used for security", "Public methods can be overridden", "Private methods cannot be called from outside"], correct: 2 }])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -66,17 +69,17 @@ const Page = () => {
         {
             topic: "Spring Boot",
             icon: Springboot,
-            border:"#0a0a0a"
+            border: "#0a0a0a"
         },
         {
             topic: "React js",
             icon: React1,
-            border:"#10e0d9"
+            border: "#10e0d9"
         },
         {
             topic: "DBMS",
             icon: Dbms,
-            border:"#04094a"
+            border: "#04094a"
         },
         {
             topic: "C",
@@ -88,7 +91,8 @@ const Page = () => {
         },
         {
             topic: "C#",
-            icon: Csharp
+            icon: Csharp,
+            border: "#610187"
         },
         {
             topic: "DSA",
@@ -111,14 +115,14 @@ const Page = () => {
     }
 
     return (
-        <div className={`${showQuizDesign && ""}`}>
-            <Heading
+        <div className={`${showQuizDesign && ""} relative`}>
+            {false && <Heading
                 title='Quiz Generator'
                 description='Quiz generator with selected topic, number of questions and flexible difficulty'
                 icon={BookText}
                 iconColor='text-[#1c62e5]'
                 bgColor='bg-[#1c62e5]/10'
-            />
+            />}
             <div className={`${showQuizDesign && " h-full flex justify-center items-center"}  px-4 lg:px-8`}>
                 {showQuizDesign && <div className='w-[90%] h-fit rounded-[12px] p-4 flex flex-col gap-5 bg-muted'>
                     <div className='text-[36px] font-semibold'>
@@ -129,7 +133,7 @@ const Page = () => {
                             <div className='text-[26px] font-semibold'>
                                 Choose any topic
                             </div>
-                            {/* <div className='scrollablerow flex w-[80%] flex-col gap-2 h-[230px] overflow-y-auto'>
+                            <div className='scrollablerow flex w-[80%] flex-col gap-2 h-[230px] overflow-y-auto'>
                                 {
                                     topics.map((item, index) => (
                                         <div key={index} className={`flex gap-2 cursor-pointer rounded-[8px] duration-300 hover:bg-gray-500/10 ${index == topicIndex && "bg-gray-500/10"} `}
@@ -147,13 +151,22 @@ const Page = () => {
                                         </div>
                                     ))
                                 }
-                            </div> */}
-                            <div className='grid grid-cols-2 gap-2'>
+                            </div>
+                            {/* <div className='grid grid-cols-2 gap-2'>
                                 {
                                     topics.map((topic, index) => (
                                         <div key={index} style={{
-                                            borderColor: topic.border
-                                        }} className={`w-full border border-[${topic.border}"] rounded-[8px] flex justify-center items-center py-4 gap-2`}>
+                                            borderColor: topic.border,
+                                        }}
+                                            onMouseEnter={(e) => {
+                                                if (topic.border) {
+                                                    e.currentTarget.style.boxShadow = `0 0 10px ${topic.border}`;
+                                                }
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.boxShadow = 'none';
+                                            }}
+                                            className={`w-full border cursor-pointer hover:bg-white duration-300 border-[${topic.border}"] rounded-[8px] flex justify-center items-center py-4 gap-2`}>
                                             <div className='h-6 w-6'>
                                                 <topic.icon></topic.icon>
                                             </div>
@@ -163,7 +176,7 @@ const Page = () => {
                                         </div>
                                     ))
                                 }
-                            </div>
+                            </div> */}
                         </div>
                         <div className='flex flex-col gap-5'>
                             <div className='flex flex-col gap-2'>
@@ -211,8 +224,8 @@ const Page = () => {
                         </Button>
                     </div>
                 </div>}
+                {questions && <QuestionsComponents questions={questions} questionNo={questionNo} />}
                 <div className='spacer-y-4 mt-4'>
-                    {/* TODO: Change logo in spinner */}
                     {
                         isLoading && (
                             <div className='p-8 rounded-lg w-full h-[500px] flex items-center justify-center'>
@@ -220,15 +233,19 @@ const Page = () => {
                             </div>
                         )
                     }
-                    {/* TODO: Empty image */}
-                    {
-                        // messages.length === 0 && !isLoading && (
-                        //     <Empty label="No Conversation started." />
-                        // )
-                    }
                     <div className='flex flex-col-reverse gap-y-4'>
                     </div>
                 </div>
+            </div>
+            <div className='absolute right-[100px] top-[50%] -translate-y-1/2'
+                onClick={() => { setQuestionNo(questionNo + 1) }}
+            >
+                <ChevronRightCircle className='h-10 w-10' />
+            </div>
+            <div className='absolute left-[100px] z-[100] top-[50%] -translate-y-1/2'
+                onClick={() => { setQuestionNo(questionNo - 1) }}
+            >
+                <ChevronLeftCircle className='h-10 w-10' />
             </div>
         </div>
     )
