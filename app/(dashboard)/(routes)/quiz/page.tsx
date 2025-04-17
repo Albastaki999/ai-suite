@@ -16,6 +16,16 @@ import BotAvatar from '@/components/bot-avatar'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Java from '@/components/icons/java'
 import questionsAPI from '@/app/api/questionsAPI'
+import Python from '@/components/icons/python'
+import Sql from '@/components/icons/sql'
+import Springboot from '@/components/icons/springboot'
+import React1 from '@/components/icons/react'
+import Dbms from '@/components/icons/dbms'
+import Cplus from '@/components/icons/cplus'
+import Csharp from '@/components/icons/csharp'
+import Dsa from '@/components/icons/dsa'
+import Os from '@/components/icons/os'
+import C from '@/components/icons/c'
 
 const Page = () => {
     const router = useRouter()
@@ -40,47 +50,53 @@ const Page = () => {
     const topics = [
         {
             topic: "Java",
-            icon: Java
+            icon: Java,
+            border: "#e6761c"
         },
         {
             topic: "Python",
-            icon: Java
+            icon: Python,
+            border: "#118029"
         },
         {
             topic: "SQL",
-            icon: Java
+            icon: Sql,
+            border: "#db2121"
         },
         {
             topic: "Spring Boot",
-            icon: Java
+            icon: Springboot,
+            border:"#0a0a0a"
         },
         {
             topic: "React js",
-            icon: Java
+            icon: React1,
+            border:"#10e0d9"
         },
         {
             topic: "DBMS",
-            icon: Java
+            icon: Dbms,
+            border:"#04094a"
         },
         {
             topic: "C",
-            icon: Java
+            icon: C
         },
         {
             topic: "C++",
-            icon: Java
+            icon: Cplus
         },
         {
             topic: "C#",
-            icon: Java
+            icon: Csharp
         },
         {
             topic: "DSA",
-            icon: Java
+            icon: Dsa
         },
         {
             topic: "Operating Systems",
-            icon: Java
+            icon: Os
         },
     ]
 
@@ -95,7 +111,7 @@ const Page = () => {
     }
 
     return (
-        <div className={`${showQuizDesign && "grid grid-rows-10"}`}>
+        <div className={`${showQuizDesign && ""}`}>
             <Heading
                 title='Quiz Generator'
                 description='Quiz generator with selected topic, number of questions and flexible difficulty'
@@ -103,17 +119,17 @@ const Page = () => {
                 iconColor='text-[#1c62e5]'
                 bgColor='bg-[#1c62e5]/10'
             />
-            <div className={`${showQuizDesign && "row-span-10 h-full flex justify-center items-center"}  px-4 lg:px-8`}>
-                {showQuizDesign && <div className='w-[50%] h-fit rounded-[12px] p-4 flex flex-col gap-5 bg-muted'>
+            <div className={`${showQuizDesign && " h-full flex justify-center items-center"}  px-4 lg:px-8`}>
+                {showQuizDesign && <div className='w-[90%] h-fit rounded-[12px] p-4 flex flex-col gap-5 bg-muted'>
                     <div className='text-[36px] font-semibold'>
                         Design your Quiz
                     </div>
                     <div className='flex justify-between w-full'>
-                        <div>
+                        <div className='w-full'>
                             <div className='text-[26px] font-semibold'>
                                 Choose any topic
                             </div>
-                            <div className='flex flex-col gap-2'>
+                            {/* <div className='scrollablerow flex w-[80%] flex-col gap-2 h-[230px] overflow-y-auto'>
                                 {
                                     topics.map((item, index) => (
                                         <div key={index} className={`flex gap-2 cursor-pointer rounded-[8px] duration-300 hover:bg-gray-500/10 ${index == topicIndex && "bg-gray-500/10"} `}
@@ -127,6 +143,22 @@ const Page = () => {
                                             </div>
                                             <div className='text-[18px] font-medium'>
                                                 {item.topic}
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div> */}
+                            <div className='grid grid-cols-2 gap-2'>
+                                {
+                                    topics.map((topic, index) => (
+                                        <div key={index} style={{
+                                            borderColor: topic.border
+                                        }} className={`w-full border border-[${topic.border}"] rounded-[8px] flex justify-center items-center py-4 gap-2`}>
+                                            <div className='h-6 w-6'>
+                                                <topic.icon></topic.icon>
+                                            </div>
+                                            <div className='text-[25px]'>
+                                                {topic.topic}
                                             </div>
                                         </div>
                                     ))
