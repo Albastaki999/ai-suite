@@ -1,7 +1,7 @@
 'use client'
 import * as z from 'zod'
 import Heading from '@/components/heading'
-import { BookText, ChevronLeftCircle, ChevronRightCircle } from 'lucide-react'
+import { BookText } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -10,9 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import Loader from '@/components/loader'
-import { cn } from '@/lib/utils'
-import UserAvatar from '@/components/user-avatar'
-import BotAvatar from '@/components/bot-avatar'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Java from '@/components/icons/java'
 import questionsAPI from '@/app/api/questionsAPI'
@@ -27,29 +24,39 @@ import Dsa from '@/components/icons/dsa'
 import Os from '@/components/icons/os'
 import C from '@/components/icons/c'
 import QuestionsComponents from '@/components/questions'
+import Progress from '@/components/progress'
 
 export type Questions = {
     question: string,
     options: string[],
     correct: number
 }
+
+export type ChosenOptionsType = {
+    [questionIndex: number]: number;
+}
+
 const Page = () => {
-    const router = useRouter()
     const [topicChosen, setTopicChosen] = useState<string>("");
     const [topicIndex, setTopicIndex] = useState<number>(-1);
     const [difficulty, setDifficulty] = useState<string>("");
     const [no, setNo] = useState<number>();
-    const [questionNo, setQuestionNo] = useState<number>(1)
     const [isLoading, setIsloading] = useState<boolean>(false);
     const [showQuizDesign, setShowQuizDesign] = useState<boolean>(false)
+    const [showQuestions, setShowQuestions] = useState<boolean>(true);
+    const [showProgressPage, setShowProgressPage] = useState<boolean>(false);
+    const [marks, setMarks] = useState<number>(0)
     const [questions, setQuestions] = useState<Questions[]>([{ question: "What is the difference between public and private methods in Java?", options: ["Both are used to create methods", "Only private methods are used for security", "Public methods can be overridden", "Private methods cannot be called from outside"], correct: 2 },
     { question: "What is the difference between public and private methods in Java?", options: ["Both are used to create methods", "Only private methods are used for security", "Public methods can be overridden", "Private methods cannot be called from outside"], correct: 2 }])
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            prompt: ''
+    // const [questions, setQuestions] = useState<Questions[]>()
+    const [chosenOptions, setChosenOptions] = useState<ChosenOptionsType>(() => {
+        const initialOptions: ChosenOptionsType = {};
+        for (let i = 0; i < questions.length; i++) {
+            initialOptions[i] = -1;
         }
-    })
+        return initialOptions;
+    });
+
     const topics = [
         {
             topic: "Java",
@@ -109,14 +116,24 @@ const Page = () => {
         setIsloading(true)
         const res = await questionsAPI(topicChosen, Number(no), difficulty);
         console.log(res);
-        setQuestions(res)
+        if (res) {
+            setQuestions(res)
+            setChosenOptions(() => {
+                const initialOptions: ChosenOptionsType = {};
+                for (let i = 0; i < questions.length; i++) {
+                    initialOptions[i] = -1;
+                }
+                return initialOptions;
+            })
+            setShowQuestions(true)
+        }
         setIsloading(false)
 
     }
 
     return (
         <div className={`${showQuizDesign && ""} relative`}>
-            {false && <Heading
+            {showQuizDesign && <Heading
                 title='Quiz Generator'
                 description='Quiz generator with selected topic, number of questions and flexible difficulty'
                 icon={BookText}
@@ -224,7 +241,8 @@ const Page = () => {
                         </Button>
                     </div>
                 </div>}
-                {questions && <QuestionsComponents questions={questions} questionNo={questionNo} />}
+                {showQuestions && Array.isArray(questions) && chosenOptions && <QuestionsComponents chosenOptions={chosenOptions} setChosenOptions={setChosenOptions} marks={marks} setMarks={setMarks} questions={questions} setShowQuestions={setShowQuestions} setShowProgressPage={setShowProgressPage} />}
+                {showProgressPage && <Progress questions={questions} marks={marks} totalQuestions={questions.length} />}
                 <div className='spacer-y-4 mt-4'>
                     {
                         isLoading && (
@@ -236,16 +254,6 @@ const Page = () => {
                     <div className='flex flex-col-reverse gap-y-4'>
                     </div>
                 </div>
-            </div>
-            <div className='absolute right-[100px] top-[50%] -translate-y-1/2'
-                onClick={() => { setQuestionNo(questionNo + 1) }}
-            >
-                <ChevronRightCircle className='h-10 w-10' />
-            </div>
-            <div className='absolute left-[100px] z-[100] top-[50%] -translate-y-1/2'
-                onClick={() => { setQuestionNo(questionNo - 1) }}
-            >
-                <ChevronLeftCircle className='h-10 w-10' />
             </div>
         </div>
     )

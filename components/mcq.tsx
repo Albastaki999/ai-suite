@@ -1,3 +1,4 @@
+'use client'
 import { Questions } from '@/app/(dashboard)/(routes)/quiz/page'
 import React, { useState } from 'react'
 import { ChosenOptionsType } from './questions'
@@ -8,10 +9,11 @@ interface McqProps {
     marks: number
     setMarks: React.Dispatch<React.SetStateAction<number>>
     chosenOptions: ChosenOptionsType
+    updateChosenOption: (index: number, value: number) => void;
 }
 
 const Mcq = ({
-    index, q, marks, setMarks, chosenOptions
+    index, q, marks, setMarks, chosenOptions, updateChosenOption
 } : McqProps) => {
     const [chosenOption, setChosenOption] = useState<number>(-1)
     return (
@@ -29,7 +31,8 @@ const Mcq = ({
                             <div key={idx} className='w-full flex gap-3 bg-muted px-2 py-4 rounded-[8px]'>
                                 <input className='rounded-full' checked={chosenOption == idx} type="checkbox" onChange={() => {
                                     setChosenOption(idx)
-                                    chosenOptions[index] = idx;
+                                    updateChosenOption(index, idx)
+                                    console.log(chosenOptions);
                                 }} />
                                 {opt}
                             </div>
