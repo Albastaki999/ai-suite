@@ -21,7 +21,11 @@ import codeAPI from '@/app/api/codeAPI'
 
 const Page = () => {
     const router = useRouter()
-    const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
+    const [messages, setMessages] = useState<{
+        by: string; content: string | {
+            error: string;
+        }
+    }[]>([])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -140,7 +144,7 @@ const Page = () => {
                                             )
                                         }}
                                     >
-                                        {message.content || ""}
+                                        {typeof message.content === "string" ? message.content : message.content.error}
                                     </ReactMarkdown>
                                 </div>
                             </div>

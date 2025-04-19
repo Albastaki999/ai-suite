@@ -20,7 +20,11 @@ import BotAvatar from '@/components/bot-avatar'
 
 const Page = () => {
     const router = useRouter()
-    const [messages, setMessages] = useState<{ by: string; content: string }[]>([])
+    const [messages, setMessages] = useState<{
+        by: string; content: string | {
+            error: string
+        }
+    }[]>([])
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -138,7 +142,7 @@ const Page = () => {
                             >
                                 {message.by === "user" ? <UserAvatar /> : <BotAvatar />}
                                 <p className='text-sm'>
-                                    {message.content}
+                                    {typeof message.content === "string" ? message.content : message.content.error}
                                 </p>
                             </div>
                         ))}
