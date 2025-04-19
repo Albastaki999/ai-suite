@@ -2,7 +2,7 @@
 
 import * as z from 'zod'
 import Heading from '@/components/heading'
-import { ArrowLeft, BookText } from 'lucide-react'
+import { ArrowLeft, MessageCircleQuestion } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -107,7 +107,7 @@ const Page = () => {
                 <Heading
                     title="Quiz Generator"
                     description="Quiz generator with selected topic, number of questions and flexible difficulty"
-                    icon={BookText}
+                    icon={MessageCircleQuestion}
                     iconColor="text-[#1c62e5]"
                     bgColor="bg-[#1c62e5]/10"
                 />

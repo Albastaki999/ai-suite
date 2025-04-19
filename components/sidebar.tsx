@@ -5,7 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { cn } from '@/lib/utils'
-import { BookText, Code, ImageIcon, LayoutDashboard, MailPlus, MessageSquare, Music } from 'lucide-react'
+import { MessageCircleQuestion, Code, ImageIcon, LayoutDashboard, MailPlus, MessageSquare, Music } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 const montserrat = Montserrat({
@@ -40,7 +40,7 @@ const routes = [
   },
   {
     label: "Quiz Generator",
-    icon: BookText,
+    icon: MessageCircleQuestion,
     href: "/quiz",
     color: "text-[#1c62e5]"
   },
