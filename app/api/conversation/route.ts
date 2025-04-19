@@ -13,7 +13,7 @@ export async function POST(
 ) {
     try {
         const { userId } = await auth()
-        const body = await request.json()
+        const body = await request.json() 
         const { messages } = body
 
         if (!userId) {
