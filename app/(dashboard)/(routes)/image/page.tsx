@@ -85,7 +85,7 @@ const Page = () => {
                             <FormField
                                 name='prompt'
                                 render={({ field }) => (
-                                    <FormItem className='col-span-12 lg:col-span-6' >
+                                    <FormItem className='col-span-12 lg:col-span-8' >
                                         <FormControl className='m-0 p-0'>
                                             <Input
                                                 className='border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent'
@@ -124,7 +124,7 @@ const Page = () => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
+                            {/* <FormField
                                 control={form.control}
                                 name='resolution'
                                 render={({ field }) => (
@@ -150,7 +150,7 @@ const Page = () => {
                                         </Select>
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
                             <Button className='col-span-12 lg:col-span-2 w-full  ' disabled={isLoading} >
                                 Generate
                             </Button>
@@ -166,16 +166,8 @@ const Page = () => {
                             </div>
                         )
                     }
-                    {/* TODO: Empty image */}
-                    {
-                        // messages.length === 0 && !isLoading && (
-                        //     <Empty label="No Conversation started." />
-                        // )
-                    }
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8'>
                         {imageUrls.map((src) => {
-                            const resolution = form.getValues('resolution') || '512x512'
-                            const [width, height] = resolution.split('x').map(Number)
 
                             return (
                                 <Card key={src} className='rounded-lg overflow-hidden'>

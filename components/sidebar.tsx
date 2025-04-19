@@ -2,11 +2,12 @@
 import { Montserrat } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { cn } from '@/lib/utils'
-import { MessageCircleQuestion, Code, ImageIcon, LayoutDashboard, MailPlus, MessageSquare, Music } from 'lucide-react'
+import { MessageCircleQuestion, Code, ImageIcon, LayoutDashboard, MailPlus, MessageSquare, Music, Podcast, ChevronDown } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const montserrat = Montserrat({
   weight: "600",
@@ -45,21 +46,28 @@ const routes = [
     color: "text-[#1c62e5]"
   },
   {
-    label: "Music Generation",
-    icon: Music,
-    href: "/music",
-    color: "text-emerald-500",
-  },
-  {
     label: "Email Composer",
     icon: MailPlus,
     href: "/email",
     color: "text-red-400",
   },
+  {
+    label: "Podcast Condensor",
+    icon: Podcast,
+    href: "/podcast",
+    color: "text-[#c9913c]"
+  },
+  {
+    label: "Music Generation",
+    icon: Music,
+    href: "/music",
+    color: "text-emerald-500",
+  },
 ]
 
 const Sidebar = () => {
   const pathname = usePathname()
+  const [openBeta, setOpenBeta] = useState<boolean>(false)
   return (
     <div className='space-y-4 py-4 h-full flex flex-col bg-[#111827] text-white '>
       <div className='px-3 py-2 flex-1'>
@@ -77,7 +85,7 @@ const Sidebar = () => {
         </Link>
         <div className='space-y-1'>
           {
-            routes.map((route) => (
+            routes.slice(0, 6).map((route) => (
               <Link
                 href={route.href}
                 key={route.href}
@@ -94,6 +102,50 @@ const Sidebar = () => {
             )
           }
         </div>
+        <div className='p-3 bg flex justify-between items-center w-full cursor-pointer hover:text-white hover:bg-white/10 rounded-lg duration-300 mt-3'
+          onClick={() => {
+            setOpenBeta(!openBeta)
+          }}
+        >
+          <div>Beta Features</div>
+          {/* <LucideTriangle fill='gray' className='h-3 w-3 rotate-90 text-gray-500' /> */}
+          <ChevronDown className={`${openBeta && "rotate-180"} duration-300`} />
+        </div>
+        {<AnimatePresence>
+          {openBeta &&
+            <motion.div
+              initial={{
+                height: 0
+              }}
+              animate={{
+                height: "fit-content"
+              }}
+              exit={{
+                height: 0
+              }}
+              transition={{
+                duration: 0.3
+              }}
+              className='flex flex-col pl-5 overflow-hidden'>
+              {
+                routes.slice(6).map((route) => (
+                  <Link
+                    href={route.href}
+                    key={route.href}
+                    className={cn('text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition',
+                      pathname === route.href ? 'text-white bg-white/10' : 'text-zinc-400')
+                    }
+                  >
+                    <div className='flex items-center flex-1'>
+                      <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
+                      {route.label}
+                    </div>
+                  </Link>
+                ))
+              }
+            </motion.div>}
+        </AnimatePresence>
+        }
       </div>
     </div>
   )
