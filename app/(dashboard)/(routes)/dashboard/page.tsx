@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Code, ImageIcon, MailPlus, MessageSquare, Music } from "lucide-react";
+import { ArrowRight, Code, ImageIcon, MailPlus, MessageSquare, Music, MessageCircleQuestion } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const tools = [
@@ -40,6 +40,13 @@ const tools = [
     color: "text-red-400",
     bgColor: "bg-red-400/10",
     href: "/email",
+  },
+  {
+    label: "Quiz Generator",
+    icon: MessageCircleQuestion,
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    href: "/quiz",
   },
 ]
 

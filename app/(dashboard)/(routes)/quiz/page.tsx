@@ -127,7 +127,7 @@ const Page = () => {
                                     {topics.map((item, index) => (
                                         <div
                                             key={index}
-                                            className={`flex gap-2 cursor-pointer rounded-[8px] duration-300 hover:bg-gray-500/10 ${index === topicIndex && 'bg-gray-500/10'
+                                            className={`flex gap-2 cursor-pointer rounded-[8px] duration-300 hover:bg-gray-500/20 ${index === topicIndex && 'bg-gray-500/60'
                                                 }`}
                                             onClick={() => {
                                                 setTopicIndex(index)
