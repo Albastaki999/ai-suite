@@ -55,7 +55,7 @@ const routes = [
     label: "Podcast Condensor",
     icon: Podcast,
     href: "/podcast",
-    color: "text-[#c9913c]"
+    color: "text-amber-600"
   },
   {
     label: "Music Generation",
