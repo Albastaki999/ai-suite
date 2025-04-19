@@ -6,7 +6,7 @@ import { ArrowLeft, MessageCircleQuestion } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { formSchema } from './constants'
+import { formSchema, QuestionsArraySchema } from './constants'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
@@ -84,21 +84,27 @@ const Page = () => {
         setShowQuizDesign(false)
         setIsLoading(true)
         try {
-            const res = await questionsAPI(topicChosen, Number(no), difficulty)
-            if (res) {
-                setQuestions(res)
-                const initialOptions: ChosenOptionsType = {}
-                for (let i = 0; i < res.length; i++) {
-                    initialOptions[i] = -1
+                while (true) {
+                const res = await questionsAPI(topicChosen, Number(no), difficulty)
+
+                console.log(QuestionsArraySchema.safeParse(res).success, "type")
+                if (res && QuestionsArraySchema.safeParse(res).success) {
+                    setQuestions(res)
+                    const initialOptions: ChosenOptionsType = {}
+                    for (let i = 0; i < res.length; i++) {
+                        initialOptions[i] = -1
+                    }
+                    setChosenOptions(initialOptions)
+                    setShowQuestions(true)
+                    return;
                 }
-                setChosenOptions(initialOptions)
-                setShowQuestions(true)
             }
-        } catch (error) {
-            console.error('Error fetching questions:', error)
-        } finally {
-            setIsLoading(false)
-        }
+            } catch (error) {
+                console.error('Error fetching questions:', error)
+            } finally {
+                setIsLoading(false)
+            }
+
     }
 
     return (
