@@ -1,16 +1,18 @@
-import { Questions } from '@/app/(dashboard)/(routes)/quiz/page'
+import { ChosenOptionsType, Questions } from '@/app/(dashboard)/(routes)/quiz/page'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
+import CorrectQuestions from './correctQuestions'
 
 interface Props {
     questions: Questions[]
     openAnswers: boolean
     setOpenAnswers: React.Dispatch<React.SetStateAction<boolean>>
+    chosenOptions: ChosenOptionsType
 }
 
 const ViewAnswers = ({
-    questions, openAnswers, setOpenAnswers
+    questions, openAnswers, setOpenAnswers, chosenOptions
 }: Props) => {
     return (
         <>
@@ -44,12 +46,10 @@ const ViewAnswers = ({
                                 View Answers
                             </div>
                             <div className=' bg-gray-300 h-[1px] w-full mt-3 '></div>
-                            <div className='flex flex-col gap-1 mt-3'>
+                            <div className='flex flex-col gap-1 mt-3 max-h-[500px] overflow-y-auto scrollablerow'>
                                 {
                                     questions.map((q, i) => (
-                                        <div key={i} className='p-2 border rounded-[6px]'>
-                                            {q.question}
-                                        </div>
+                                        <CorrectQuestions chosenOptions={chosenOptions} q={q} i={i} key={i} />
                                     ))
                                 }
                             </div>

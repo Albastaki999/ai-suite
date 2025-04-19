@@ -1,7 +1,6 @@
 'use client'
-import { Questions } from '@/app/(dashboard)/(routes)/quiz/page'
+import { ChosenOptionsType, Questions } from '@/app/(dashboard)/(routes)/quiz/page'
 import React, { useState } from 'react'
-import { ChosenOptionsType } from './questions'
 
 interface McqProps {
     index: number
@@ -18,7 +17,7 @@ const Mcq = ({
     const [chosenOption, setChosenOption] = useState<number>(-1)
     return (
         <div className='min-w-full flex justify-center items-center'>
-            <div className='h-[450px] w-[80%] mt-[100px] flex flex-col items-center'>
+            <div className='h-[450px] w-[80%] mt-[50px] flex flex-col items-center'>
                 {/* Question */}
                 <div className='text-[30px] font-medium text-center break-words'>
                     {q.question}
